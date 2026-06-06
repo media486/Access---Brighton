@@ -1,0 +1,6 @@
+[build]
+  publish = "."
+  command = "pip install anthropic && python generate_site.py"
+
+[build.environment]
+  PYTHON_VERSION = "3.11"
