@@ -1,0 +1,37 @@
+name: Daily News Update
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install anthropic
+
+      - name: Generate today's site
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python generate_site.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "Access Brighton Bot"
+          git config user.email "bot@access-brighton"
+          git add index.html
+          git diff --staged --quiet || git commit -m "Daily news update: $(date +'%Y-%m-%d')"
+          git push
