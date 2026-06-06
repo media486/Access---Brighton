@@ -267,6 +267,9 @@ def render_html(data: dict) -> str:
   .foot-brand {{ font-family:'Fraunces',serif; font-size:1.5rem; font-weight:900; color:#fff; margin-bottom:10px; }}
   .foot-brand span {{ color:var(--accent); }}
   .updated-badge {{ display:inline-block; background:rgba(201,168,76,.15); border:1px solid var(--gold); color:var(--gold); font-size:10px; letter-spacing:2px; text-transform:uppercase; padding:3px 10px; border-radius:2px; margin-left:12px; vertical-align:middle; }}
+  .dl-btn {{ display:inline-flex; align-items:center; gap:7px; background:var(--accent); color:#fff; border:none; font-family:'DM Sans',sans-serif; font-size:11px; letter-spacing:2px; text-transform:uppercase; font-weight:700; padding:8px 18px; border-radius:3px; cursor:pointer; text-decoration:none; margin-left:16px; vertical-align:middle; transition:background .2s; }}
+  .dl-btn:hover {{ background:#c04020; }}
+  .dl-btn svg {{ width:14px; height:14px; fill:#fff; }}
   @media(max-width:768px) {{
     .hero-grid {{ grid-template-columns:1fr; }}
     .hero-main {{ padding-right:0; border-right:none; border-bottom:1px solid var(--rule); padding-bottom:24px; margin-bottom:24px; }}
@@ -295,6 +298,10 @@ def render_html(data: dict) -> str:
 <div class="datebar">
   {date_str}
   <span class="updated-badge">Auto-updated daily</span>
+  <button class="dl-btn" onclick="downloadPage()" title="Save page as brighton-disability-news.html">
+    <svg viewBox="0 0 16 16"><path d="M8 12l-4-4h2.5V2h3v6H12L8 12zm-5 2h10v-1.5H3V14z"/></svg>
+    Save page
+  </button>
 </div>
 
 <div class="wrap" style="padding-top:32px;">
@@ -379,6 +386,20 @@ def render_html(data: dict) -> str:
     <div class="foot-bottom">© {datetime.now().year} Access Brighton &nbsp;·&nbsp; Community disability news for Brighton &amp; Hove &nbsp;·&nbsp; Auto-updated daily via AI</div>
   </div>
 </footer>
+<script>
+  function downloadPage() {{
+    var serialised = '<!DOCTYPE html>' + document.documentElement.outerHTML;
+    var blob = new Blob([serialised], {{type: 'text/html;charset=utf-8'}});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'brighton-disability-news.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){{ URL.revokeObjectURL(url); }}, 2000);
+  }}
+</script>
 </body>
 </html>"""
 
